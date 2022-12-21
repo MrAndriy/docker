@@ -1,12 +1,14 @@
-version: "3"
+version: "3:8"
 
 services:
   mongo:
-    image: mongo:5.0.5
+    image: mongo:5.0.6-focal
     ports:
-      - "27017"
+      - "27017:27017"
     volumes:
-      - mongo_data:/data/db
+      - ./data:/data/db
+    networks:
+      - mongo-network
 
   mongo-express:
     image: mongo-express:1.0.0-alpha.4
@@ -17,6 +19,12 @@ services:
       - ME_CONFIG_MONGODB_SERVER=mongo
       - ME_CONFIG_BASICAUTH_USERNAME=dev_admin
       - ME_CONFIG_BASICAUTH_PASSWORD=dev_password
+    networks:
+      - mongo-network
 
 volumes:
   mongo_data:
+
+networks:
+  mongo-network:
+    driver: bridge
